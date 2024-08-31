@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'scripts_data.dart'; // Make sure this path is correct
 import 'dart:io';
-import 'dart:convert';
 
 class InstallationApp extends StatefulWidget {
   const InstallationApp({super.key});
@@ -20,43 +19,39 @@ class InstallationAppState extends State<InstallationApp> {
   @override
   void initState() {
     super.initState();
+    // Initially, no checkboxes should be checked
     executedStatus = List<bool>.filled(scripts.length, false);
-    if (executedStatus.isNotEmpty) {
-      executedStatus[0] = true;
-    }
   }
 
-  void handleNext() async {
-    setState(() {
-      if (currentScriptIndex < scripts.length - 1) {
-        // Keep the current item checked
-        executedStatus[currentScriptIndex] = true;
-        // Move to the next item and check it
-        currentScriptIndex++;
-        executedStatus[currentScriptIndex] = true;
+  void handleNext() {
+    if (currentScriptIndex < scripts.length) {
+      // Execute the corresponding script file
+      final scriptFile = scripts[currentScriptIndex]['executed_file']!;
+      print('Executing script: $scriptFile at index $currentScriptIndex');
+      executeScript(scriptFile);
 
-        // Execute the corresponding script file
-        final scriptFile = scripts[currentScriptIndex]['executed_file']!;
-        executeScript(scriptFile);
-      }
-    });
+      // Move to the next item and check it
+      setState(() {
+        executedStatus[currentScriptIndex] = true;
+        currentScriptIndex++;
+      });
+    } else {
+      print('No more scripts to execute.');
+    }
   }
 
   void executeScript(String scriptFile) async {
     try {
-      print("Executing script: $scriptFile"); // Print the path to debug
-      final process = await Process.start(
-        'bash',
-        [scriptFile],
-        mode: ProcessStartMode.normal,
-        environment: <String, String>{},
+      print('Starting terminal for script: $scriptFile');
+      await Process.start(
+        'gnome-terminal',
+        ['--', 'bash', '-c', 'bash $scriptFile'],
+        mode: ProcessStartMode.detached, // Detached mode for independent execution
       );
-      process.stdout.transform(utf8.decoder).listen((data) {
-        print(data); // You can also display this data in your UI
-      });
-      process.stderr.transform(utf8.decoder).listen((data) {
-        print(data); // You can also display this data in your UI
-      });
+      print('Terminal started for script: $scriptFile');
+
+      // Introduce a small delay to allow the terminal to open and execute the script
+      await Future.delayed(const Duration(seconds: 1));
     } catch (e) {
       print('Error: $e'); // Handle errors
     }
@@ -206,22 +201,31 @@ class InstallationAppState extends State<InstallationApp> {
                       icon: const Icon(Icons.close), // Times icon
                     ),
                     const SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: handleNext,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: greencs,
-                        foregroundColor: Colors.white,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                    if (currentScriptIndex < scripts.length) // Show Next button if there are scripts left
+                      ElevatedButton.icon(
+                        onPressed: handleNext,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: greencs,
+                          foregroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
+                          textStyle: const TextStyle(fontSize: 18),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
-                        textStyle: const TextStyle(fontSize: 18),
+                        label: const Text('Next'),
+                        icon: const Icon(Icons.arrow_forward), // Arrow forward icon
+                      )
+                    else // Show completion message when done
+                      const Text(
+                        "You are all set up, now you can start your development journey!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      label: const Text('Next'),
-                      icon:
-                          const Icon(Icons.arrow_forward), // Arrow forward icon
-                    ),
                   ],
                 ),
               ],

@@ -37,7 +37,7 @@ final List<Map<String, dynamic>> scripts = [
       "Install and configure alternative package management tools (Flatpak).",
       "Reinstall popular applications using alternative methods."
     ],
-    "executed_file": "script/remove_snap.sh"
+    "executed_file": "scripts/remove_snap.sh"
   },
   {
     "name": "Setup nvim & tmux",
@@ -49,7 +49,7 @@ final List<Map<String, dynamic>> scripts = [
       "Install Tmux and FZF.",
       "Copy configuration files to ~/.config/ directory."
     ],
-    "executed_file": "script/setup_nvim_tmux.sh"
+    "executed_file": "scripts/setup_nvim_tmux.sh"
   },
   {
     "name": "Terminal Setup",
@@ -63,7 +63,7 @@ final List<Map<String, dynamic>> scripts = [
       "Install Oh My Zsh and set Powerlevel10k as the default theme.",
       "Change default shell to Zsh."
     ],
-    "executed_file": "script/terminal_zsh.sh"
+    "executed_file": "scripts/terminal_zsh.sh"
   },
   {
     "name": "Themes Setup",
@@ -76,7 +76,7 @@ final List<Map<String, dynamic>> scripts = [
       "Install WhiteSur icon theme.",
       "Configure Flatpak applications to use the installed theme."
     ],
-    "executed_file": "script/themes.sh"
+    "executed_file": "scripts/themes.sh"
   }
 ];
 
