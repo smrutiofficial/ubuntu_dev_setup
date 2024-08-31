@@ -18,7 +18,7 @@ class InstallationAppState extends State<InstallationApp> {
   @override
   void initState() {
     super.initState();
-    executedStatus = List<bool>.filled(bashFiles.length, false);
+    executedStatus = List<bool>.filled(scripts.length, false);
     if (executedStatus.isNotEmpty) {
       executedStatus[0] = true;
     }
@@ -26,7 +26,7 @@ class InstallationAppState extends State<InstallationApp> {
 
   void handleNext() {
     setState(() {
-      if (currentScriptIndex < bashFiles.length - 1) {
+      if (currentScriptIndex < scripts.length - 1) {
         // Keep the current item checked
         executedStatus[currentScriptIndex] = true;
         // Move to the next item and check it
@@ -61,11 +61,11 @@ class InstallationAppState extends State<InstallationApp> {
                 width: 200,
                 height: 400,
                 child: ListView.builder(
-                  itemCount: bashFiles.length,
+                  itemCount: scripts.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
-                        bashFiles[index],
+                        scripts[index]['name'],
                         style: TextStyle(
                           color: executedStatus[index]
                               ? greencs
@@ -122,7 +122,7 @@ class InstallationAppState extends State<InstallationApp> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  scriptDescriptions[currentScriptIndex]['heading']!,
+                  scripts[currentScriptIndex]['heading'],
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -131,7 +131,7 @@ class InstallationAppState extends State<InstallationApp> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  scriptDescriptions[currentScriptIndex]['context']!,
+                  scripts[currentScriptIndex]['context'],
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
@@ -148,7 +148,7 @@ class InstallationAppState extends State<InstallationApp> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                ...scriptDescriptions[currentScriptIndex]['description']!
+                ...scripts[currentScriptIndex]['description']
                     .map<Widget>(
                       (point) => Text(
                         " -  $point",
@@ -164,28 +164,26 @@ class InstallationAppState extends State<InstallationApp> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // ElevatedButton.icon(
-                    //   onPressed: handleCancel,
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor:
-                    //         const Color.fromARGB(255, 255, 142, 134),
-                    //     foregroundColor: Colors.white,
-                    //     shape: const RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.all(Radius.circular(5)),
-                    //     ),
-                    //     padding: const EdgeInsets.symmetric(
-                    //         horizontal: 20, vertical: 15),
-                    //     textStyle: const TextStyle(fontSize: 18),
-                    //   ),
-                    //   label: const Text('Cancel'),
-                    //   icon: const Icon(Icons.close), // Times icon
-                    // ),
-                    // const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: handleCancel,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: redcs,
+                        foregroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
+                        textStyle: const TextStyle(fontSize: 18),
+                      ),
+                      label: const Text('Cancel'),
+                      icon: const Icon(Icons.close), // Times icon
+                    ),
+                    const SizedBox(width: 10),
                     ElevatedButton.icon(
                       onPressed: handleNext,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 166, 193, 108),
+                        backgroundColor: greencs,
                         foregroundColor: Colors.white,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -195,8 +193,7 @@ class InstallationAppState extends State<InstallationApp> {
                         textStyle: const TextStyle(fontSize: 18),
                       ),
                       label: const Text('Next'),
-                      icon:
-                          const Icon(Icons.arrow_forward), // Arrow forward icon
+                      icon: const Icon(Icons.arrow_forward), // Arrow forward icon
                     ),
                   ],
                 ),
