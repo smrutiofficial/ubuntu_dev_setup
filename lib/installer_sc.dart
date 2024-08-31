@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'scripts_data.dart';
+import 'scripts_data.dart'; // Make sure this path is correct
+import 'dart:io';
+import 'dart:convert';
 
 class InstallationApp extends StatefulWidget {
   const InstallationApp({super.key});
@@ -24,7 +26,7 @@ class InstallationAppState extends State<InstallationApp> {
     }
   }
 
-  void handleNext() {
+  void handleNext() async {
     setState(() {
       if (currentScriptIndex < scripts.length - 1) {
         // Keep the current item checked
@@ -32,8 +34,32 @@ class InstallationAppState extends State<InstallationApp> {
         // Move to the next item and check it
         currentScriptIndex++;
         executedStatus[currentScriptIndex] = true;
+
+        // Execute the corresponding script file
+        final scriptFile = scripts[currentScriptIndex]['executed_file']!;
+        executeScript(scriptFile);
       }
     });
+  }
+
+  void executeScript(String scriptFile) async {
+    try {
+      print("Executing script: $scriptFile"); // Print the path to debug
+      final process = await Process.start(
+        'bash',
+        [scriptFile],
+        mode: ProcessStartMode.normal,
+        environment: <String, String>{},
+      );
+      process.stdout.transform(utf8.decoder).listen((data) {
+        print(data); // You can also display this data in your UI
+      });
+      process.stderr.transform(utf8.decoder).listen((data) {
+        print(data); // You can also display this data in your UI
+      });
+    } catch (e) {
+      print('Error: $e'); // Handle errors
+    }
   }
 
   void handleCancel() {
@@ -193,7 +219,8 @@ class InstallationAppState extends State<InstallationApp> {
                         textStyle: const TextStyle(fontSize: 18),
                       ),
                       label: const Text('Next'),
-                      icon: const Icon(Icons.arrow_forward), // Arrow forward icon
+                      icon:
+                          const Icon(Icons.arrow_forward), // Arrow forward icon
                     ),
                   ],
                 ),

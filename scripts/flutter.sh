@@ -21,3 +21,4 @@ source ~/.zshenv
 # Run Flutter Doctor
 flutter doctor --android-licenses
 flutter doctor
+
