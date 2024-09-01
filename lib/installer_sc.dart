@@ -23,22 +23,28 @@ class InstallationAppState extends State<InstallationApp> {
     executedStatus = List<bool>.filled(scripts.length, false);
   }
 
-  void handleNext() {
-    if (currentScriptIndex < scripts.length) {
-      // Execute the corresponding script file
-      final scriptFile = scripts[currentScriptIndex]['executed_file']!;
-      print('Executing script: $scriptFile at index $currentScriptIndex');
-      executeScript(scriptFile);
-
-      // Move to the next item and check it
-      setState(() {
-        executedStatus[currentScriptIndex] = true;
-        currentScriptIndex++;
-      });
-    } else {
-      print('No more scripts to execute.');
-    }
+void handleNext() {
+  if (currentScriptIndex < scripts.length - 1) {
+    // Execute the corresponding script file
+    final scriptFile = scripts[currentScriptIndex]['executed_file']!;
+    executeScript(scriptFile);
+    // Move to the next item and check it
+    setState(() {
+      executedStatus[currentScriptIndex] = true;
+      currentScriptIndex++;
+    });
+  } else if (currentScriptIndex == scripts.length - 1) {
+    // Execute the last script and don't increment currentScriptIndex
+    final scriptFile = scripts[currentScriptIndex]['executed_file']!;
+    executeScript(scriptFile);
+    setState(() {
+      executedStatus[currentScriptIndex] = true;
+    });
+  } else {
+    print('No more scripts to execute.');
   }
+}
+
 
   void executeScript(String scriptFile) async {
     try {
