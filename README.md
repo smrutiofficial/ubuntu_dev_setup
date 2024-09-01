@@ -2,7 +2,7 @@
 
 This project automates the setup of a complete development environment on Ubuntu. It simplifies the installation of essential packages, DEB files, Flatpak applications, and custom configurations using a series of shell scripts.
 
-![Installation App Screenshot](screenshot.png)
+![Installation App Screenshot](preview.png)
 
 ## Key Features
 
