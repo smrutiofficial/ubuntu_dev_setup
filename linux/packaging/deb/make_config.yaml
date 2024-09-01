@@ -1,0 +1,34 @@
+display_name: Dev Sphere
+package_name: DevSphere
+
+maintainer:
+  name: Smruti Prakash Rout
+  email: smrutiprakashrout3@gmail.com
+
+priority: optional
+
+section: x11
+
+installed_size: 15700
+
+dependencies:
+  - mpv
+
+essential: false
+
+icon: linux/assets/icon.icns
+
+postuninstall_scripts:
+  - echo "Sorry to see you go."
+
+keywords:
+  - API
+  - API Client
+
+generic_name: API Client
+
+categories:
+  - Development
+  - Utility
+
+startup_notify: true
